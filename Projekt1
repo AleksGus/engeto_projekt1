@@ -1,0 +1,146 @@
+"""
+projekt_1.py: první projekt do Engeto Online Python Akademie
+
+author: Aleksei Gusev
+email: aleksgus@seznam.cz
+discord: Aleksei G.#1033
+"""
+dash = "-" * 40
+
+# Registrováni jsou následující uživatelé:
+uzivatele = {
+    "bob": "123",
+    "ann": "pass123",
+    "mike": "password123",
+    "liz": "pass123"
+}
+# Vyžádá si od uživatele přihlašovací jméno a heslo
+# Zjistí, jestli zadané údaje odpovídají někomu
+# z registrovaných uživatelů
+name = input("username: ")
+
+if name in uzivatele:
+    password = input("password: ")
+else:
+    print("error")
+    quit()
+if password == uzivatele.get(name):
+    print(f"{dash}.\n Welcome to the app, {name}.\n We have 3 texts to be analyzed.", dash, "", sep="\n")
+else:
+    print("unregistered user, terminating the program..")
+    quit()
+
+TEXTS = [
+'''Situated about 10 miles west of Kemmerer,
+Fossil Butte is a ruggedly impressive
+topographic feature that rises sharply
+some 1000 feet above Twin Creek Valley
+to an elevation of more than 7500 feet
+above sea level. The butte is located just
+north of US 30N and the Union Pacific Railroad,
+which traverse the valley. ''',
+'''At the base of Fossil Butte are the bright
+red, purple, yellow and gray beds of the Wasatch
+Formation. Eroded portions of these horizontal
+beds slope gradually upward from the valley floor
+and steepen abruptly. Overlying them and extending
+to the top of the butte are the much steeper
+buff-to-white beds of the Green River Formation,
+which are about 300 feet thick.''',
+'''The monument contains 8198 acres and protects
+a portion of the largest deposit of freshwater fish
+fossils in the world. The richest fossil fish deposits
+are found in multiple limestone layers, which lie some
+100 feet below the top of the butte. The fossils
+represent several varieties of perch, as well as
+other freshwater genera and herring similar to those
+in modern oceans. Other fish such as paddlefish,
+garpike and stingray are also present.'''
+]
+# Program nechá uživatele vybrat mezi třemi texty,
+# uloženými v proměnné TEXTS
+
+number_text = input("Enter a number btw. 1 and 3 to select: ")
+# Pokud uživatel zadá jiný vstup než číslo
+if not number_text.isdigit():
+    print("Cislo vyveru neni v poradku, ukoncuji...")
+    quit()
+# Pokud uživatel vybere takové číslo textu, které není v zadání
+elif int(number_text) > 3 or int(number_text) < 1:
+    print("Cislo vyveru neni v poradku, ukoncuji...")
+    quit()
+else:
+    selected_text = TEXTS[int(number_text)-1]
+    print(dash)
+    print(selected_text)
+
+# rozdělit text na slova a odstranit čárky
+clear_word1 = []
+for words in selected_text.split():
+    clear_word = words.strip(",. ")
+    clear_word1.append(clear_word)
+# pro vybraný text spočítá následující statistiky:
+# počet slov
+print(f"{dash}.\nThere are", len(clear_word1), "words in the selected text.")
+
+titel_words = selected_text.split()
+
+# počet slov začínajících velkým písmenem
+res = len([word for word in titel_words if word[0].isupper()])
+print("There are", res, "titlecase words.")
+
+# počet slov psaných velkými písmeny
+# počet slov psaných malými písmeny
+newstring = ''
+count1 = 0
+count2 = 0
+
+
+for B in clear_word1:
+	# Checking for lowercase letter and
+	# converting to uppercase.
+	if (B.isupper()) == True:
+		count1 += 1
+		newstring += (B.lower())
+
+	# Checking for uppercase letter and
+	# converting to lowercase.
+	elif (B.islower()) == True:
+		count2 += 1
+		newstring += (B.upper())
+
+print("There are", count1, "uppercase words.")
+print("There are", count2, "lowercase words.")
+
+# počet čísel (ne cifer)
+alpha, string = 0, clear_word1
+for i in string:
+    if (i.isalpha()):
+        alpha += 1
+print("There are", len(string)-alpha, "numeric strings.")
+
+# sumu všech čísel (ne cifer) v textu
+word_list = selected_text.split()
+
+num_list = [int(num) for num in filter(
+    lambda num: num.isnumeric(), word_list)]
+
+print(f"The sum of all the numbers, {sum(num_list)}.\n",dash)
+
+# Program zobrazí jednoduchý sloupcový graf,
+# který bude reprezentovat četnost různých délek slov v textu
+bar_chart = ("len", "occurences", "nr.")
+print(f"{' | '.join(bar_chart)}".upper(), dash, sep="\n")
+
+word_lengths = {}
+for word in clear_word1:
+    length = len(word)
+    if length not in word_lengths:
+        word_lengths[length] = 1
+    else:
+        word_lengths[length] = word_lengths[length] + 1
+
+word_sorted = sorted(word_lengths.keys())
+
+for key in word_sorted:
+    print(f"{key} | {'*' * word_lengths[key]} | {word_lengths[key]}")
